@@ -1,5 +1,5 @@
 package chain;
-public class Node{
+class Node{
 	public Node next;
 	public int data;
 	public Node(int data){
