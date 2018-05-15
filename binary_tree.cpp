@@ -1,7 +1,7 @@
-#include <iostream>
-#include <queue>
-#include <stack>
-#include <vector>
+#include "iostream"
+#include "queue"
+#include "stack"
+#include "vector"
 using namespace std;
 
 //The Bi_Node data structure
@@ -16,11 +16,14 @@ class Bi_Tree{
 private:
     Bi_Node * root;//the binary's root element
     int height;//the hight of the binary tree
+    int leaf_count;//the count of the leaf
     void pre_order(Bi_Node * t);
     void in_order(Bi_Node *t);
     void post_order(Bi_Node *t);
     Bi_Node * create(string &s,int &pos);
+    void change_left_right(Bi_Node *t);//change the left child and the right tree
     void get_height(Bi_Node *t,int h);
+    void get_leaf_count(Bi_Node *t);
 public:
     Bi_Tree() {
         root = nullptr;
@@ -32,6 +35,8 @@ public:
     void postOrder();
     void levelOrder();
     int getHeight();
+    void changeLeftRight();
+    int getLeafCount();//get the count of the leaf
 };
 
 Bi_Node * Bi_Tree::create(string &s,int &pos) {
@@ -117,6 +122,47 @@ void Bi_Tree::levelOrder() {
     cout<<endl;
 };
 
+void Bi_Tree::changeLeftRight(){
+    change_left_right(root);
+    return ;
+};
+
+void Bi_Tree::change_left_right(Bi_Node * t) {
+    Bi_Node * temp;
+    if(t->lchild != nullptr &&
+       t->rchild != nullptr)
+    {
+        temp = t->lchild;
+        t->lchild = t->rchild;
+        t->rchild = temp;
+    }
+    if(t->lchild != nullptr){
+        change_left_right(t->lchild);
+    }
+    if(t->rchild != nullptr){
+        change_left_right(t->rchild);
+    }
+};
+
+
+int Bi_Tree::getLeafCount() {
+        leaf_count = 0;
+        get_leaf_count(root);
+        return leaf_count;
+};
+
+void Bi_Tree::get_leaf_count(Bi_Node *t) {
+    if(t->lchild == nullptr && t->rchild == nullptr){
+        leaf_count ++;
+    }
+    if(t->lchild){
+        get_leaf_count(t->lchild);
+    }
+    if(t->rchild){
+        get_leaf_count(t->rchild);
+    }
+};
+
 //get the tree's height
 int Bi_Tree::getHeight() {
     get_height(root,0);
@@ -150,5 +196,21 @@ int main()
     a.levelOrder();
     cout<<"树高："<<endl;
     cout<<a.getHeight()<<endl;
+    cout<<"叶子节点数："<<endl;
+    cout<<a.getLeafCount()<<endl;
+    cout<<"翻转后的-------------------------------------------------------"<<endl;
+    a.changeLeftRight();
+    cout<<"前序遍历："<<endl;
+    a.preOrder();
+    cout<<"中序遍历："<<endl;
+    a.inOrder();
+    cout<<"后序遍历："<<endl;
+    a.postOrder();
+    cout<<"层序遍历："<<endl;
+    a.levelOrder();
+    cout<<"树高："<<endl;
+    cout<<a.getHeight()<<endl;
+    cout<<"叶子节点数："<<endl;
+    cout<<a.getLeafCount()<<endl;
     return 0;
 }
